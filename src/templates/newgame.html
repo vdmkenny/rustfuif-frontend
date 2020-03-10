@@ -1,6 +1,39 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Home</h1>
-Hello World
+
+<h1>Create a new game</h1>
+<form class="ui form" action="/createnewgame" method="POST">
+  <div class="field">
+    <label>Game Name</label>
+    <input type="text" name="name" placeholder="Game Name">
+  </div>
+  <div class="field">
+    <label>Start Time</label>
+  <div class="ui calendar noam_pm" id="standard_calendar">
+    <div class="ui input left icon">
+      <i class="calendar icon"></i>
+      <input type="text" name="start_time" placeholder="Date/Time">
+    </div>
+  </div>
+  </div>
+  <div class="field">
+    <label>Close Time</label>
+  <div class="ui calendar noam_pm" id="standard_calendar">
+    <div class="ui input left icon">
+      <i class="calendar icon"></i>
+      <input type="text" name="close_time" placeholder="Date/Time">
+    </div>
+  </div>
+  </div>
+  <button class="ui button" type="submit">Create New Game</button>
+</form>
+
+<script>
+$('.ui.calendar')
+  .calendar({
+	      ampm: false
+	    })
+;
+</script>
 {% endblock %}

@@ -18,10 +18,13 @@ def index():
 @app.route('/login', methods=['POST'])
 def do_login():
     cookie = get_login_cookie(username=request.form['username'], password=request.form['password'], host=app.api_host)
+    details = get_login_details(username=request.form['username'], password=request.form['password'], host=app.api_host)
     if cookie:
+        session['cookie'] = cookie
+        session['id'] = details['id']
+        session['is_admin'] = details['is_admin']
         session['logged_in'] = True
         session['username'] = request.form['username']
-        session['cookie'] = cookie
         return index()
     else:
         flash('Wrong Username or Password!')
@@ -44,11 +47,36 @@ def mygames():
         return render_template('login.html')
     return render_template('mygames.html')
 
+@app.route('/admin')
+def admin():
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    if not session.get('is_admin'):
+        return "UNAUTHORISED!"
+    return render_template('admin.html')
 
 @app.route('/newgame')
 def newgame():
     if not session.get('logged_in'):
         return render_template('login.html')
+    return render_template('newgame.html')
+
+@app.route('/createnewgame', methods=['POST'])
+def create_newgame():
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    game = {
+      "name": request.form['name'],
+      "start_time": convert_timestamp(request.form['start_time']),
+      "close_time": convert_timestamp(request.form['close_time'])
+    }
+    cookies = cookies = { 'actix-session': session.get('cookie')}
+    newgame = create_new_game(cookies, game, host=app.api_host)
+    name = request.form['name']
+    if (200 <= newgame.status_code <= 299):
+        flash(f'Succesfully created game "{name}"')
+    else:
+        flash(f'ERROR: {newgame.text}')
     return render_template('newgame.html')
 
 

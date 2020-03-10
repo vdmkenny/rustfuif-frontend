@@ -8,10 +8,15 @@
         {% block styles %}
             <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css' ) }}">
         {% endblock %}
+
+
+	<!-- You MUST include jQuery before Fomantic -->
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.4/dist/semantic.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.4/dist/semantic.min.js"></script>
+
+
     {% endblock %}
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.4/dist/semantic.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.4/dist/semantic.min.js"></script>
 </head>
 <body>
   <div class="ui inverted fixed menu">
@@ -35,7 +40,10 @@
         <i class="user icon"></i>{{ session['username'] }}
         <i class="dropdown icon"></i>
         <div class="menu">
-          <a class="item" href="{{ url_for('do_logout')  }}">Log Out</a>
+{% if session['is_admin'] %}
+            <a class="item" href="{{ url_for('admin')  }}"><i class="cog icon"></i>Admin Settings</a>
+{% endif %}
+            <a class="item" href="{{ url_for('do_logout')  }}"><i class="door open icon"></i>Log Out</a>
         </div>
     </div>
 
