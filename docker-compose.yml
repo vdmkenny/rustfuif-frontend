@@ -1,0 +1,49 @@
+---
+version: "3.4"
+
+services:
+  rustfuif:
+    image: bartwillems/rustfuif:latest
+    environment:
+      RUST_LOG: "debug"
+      POSTGRES_USERNAME: "rustfuif"
+      POSTGRES_PASSWORD: "secret"
+      POSTGRES_DATABASE: "rustfuif-dev"
+      POSTGRES_HOST: "postgres"
+      POSTGRES_PORT: "5432"
+      RUST_LOG: "actix_server=debug,actix_web=debug,rustfuif=debug"
+      DATABASE_URL: "postgres://rustfuif:secret@postgres/rustfuif-dev"
+      HOST: "0.0.0.0"
+      PORT: 8080
+      REDIS_HOST: "redis"
+      REDIS_PORT: 6379
+      SESSION_PRIVATE_KEY: "iWFlSj6XbLfB3YsdVZbs6FWUkl45eKEnOVUcv3IVOnWmTwhwEt3MjOdNXjaw3VXI%"
+    depends_on:
+      - postgres
+    networks:
+      - backend
+    ports:
+      - 8080:8080
+
+  postgres:
+    image: postgres:12
+    environment:
+      POSTGRES_DB: "rustfuif"
+      POSTGRES_USER: "rustfuif"
+      POSTGRES_PASSWORD: "secret"
+    networks:
+      - backend
+
+  redis:
+    image: redis:5
+    ports:
+      - 6379:6379
+    networks:
+      - backend
+
+networks:
+  backend:
+
+volumes:
+  rustfuif_postgres:
+

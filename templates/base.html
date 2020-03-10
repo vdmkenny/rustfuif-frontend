@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% block head %}
+        <meta charset="utf-8">
+        <title>{% block title %}RustFuif Frontend{% endblock %}</title>
+        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        {% block styles %}
+            <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css' ) }}">
+        {% endblock %}
+    {% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.4/dist/semantic.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.4/dist/semantic.min.js"></script>
+</head>
+<body>
+  <div class="ui inverted fixed menu">
+	  <div class="item">
+	  <i class="large inverted beer icon"></i>
+      RustFuif
+    </div>
+    <div class="ui simple dropdown item">
+        Games
+        <i class="dropdown icon"></i>
+        <div class="menu">
+          <a class="item" href="{{ url_for('index')  }}">All Games</a>
+          <a class="item" href="{{ url_for('mygames')  }}">My Games</a>
+          <a class="item" href="{{ url_for('newgame')  }}">New Game</a>
+        </div>
+    </div>
+
+    <div class="right menu">
+{% if session['logged_in'] %}
+    <div class="ui simple dropdown item">
+        <i class="user icon"></i>{{ session['username'] }}
+        <i class="dropdown icon"></i>
+        <div class="menu">
+          <a class="item" href="{{ url_for('do_logout')  }}">Log Out</a>
+        </div>
+    </div>
+
+{% else %}
+
+    <a class="ui item" href="{{ url_for('index') }}">
+      Login
+    </a>
+
+{% endif %}
+
+  </div>  
+  </div>
+  </br>
+  </br>
+  </br>
+<div class="ui main text container">
+ {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <div class="ui info message">
+      {{ message }}
+      </div>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %} 
+    {% block content %}{% endblock %}
+<footer>
+    {% block footer %}
+    </br><small> &copy; Rustfuif
+        </small>
+    {% endblock %}
+</footer>
+</div>
+{% block scripts %}{% endblock %}
+</body>
+</html>
